@@ -15,6 +15,7 @@ namespace MyProject
     {
         private const string TestUrl = "https://www.google.com/";
         private const string shopUrl = "https://shop.coles.com.au";
+        private const string shopUrl_WWS = "https://www.woolworths.com.au";
         public static int Main(string[] args)
         {
             bool isRunning = true; // For exit function
@@ -339,7 +340,8 @@ namespace MyProject
 
         private static async void WoolworthsTestMainAsync(string cachePath)
         {
-            int delayTimer = 2500;
+            int delayTimer = 5000;
+            List<string> pageLinkList = new List<string>();
             List<string> cateLinkList = new List<string>();
             List<string> productPageLinkList = new List<string>();
             List<Data> dataList = new List<Data>();
@@ -379,14 +381,8 @@ namespace MyProject
 
                 var onUi = Cef.CurrentlyOnThread(CefThreadIds.TID_UI);
 
-                // For Google.com pre-pupulate the search text box
-                await browser.EvaluateScriptAsync("document.getElementById('lst-ib').value = 'CefSharp Was Here!'");
-
-                // Wait for the screenshot to be taken,
-                // if one exists ignore it, wait for a new one to make sure we have the most up to date
-                //await browser.ScreenshotAsync(true).ContinueWith(DisplayBitmap);
-
-                await LoadPageAsync(browser, "https://www.woolworths.com.au/Shop/Browse/drinks/black-tea");
+                
+                await LoadPageAsync(browser, "https://www.woolworths.com.au/Shop/Browse/drinks/black-tea?pageNumber=1");
                 Thread.Sleep(delayTimer);
 
                 //Gets a wrapper around the underlying CefBrowser instance
@@ -399,7 +395,58 @@ namespace MyProject
 
                 cateLinkList = WoolworthsExtraction.FirstCategoryLinkExtraction(tempSource);
 
+                foreach (string a in cateLinkList)
+                {
+                    string pageLink = "";
+                    pageLinkList.Add(a);
+                    await LoadPageAsync(browser, shopUrl_WWS + a);
+                    Thread.Sleep(delayTimer);
+                    pageLink = WoolworthsExtraction.PageExtraction(await browser.GetSourceAsync());
+
+                    if (pageLink != null && pageLink != "")
+                    {
+                        pageLinkList.Add(pageLink);
+                    }
+
+                    Console.WriteLine("************************First Page Link*************************");
+                    Console.WriteLine(shopUrl_WWS + a);
+                    Console.WriteLine("********************************************************************");
+                    if (pageLink != null && pageLink != "")
+                    { 
+
+                    Console.WriteLine("************************Second page link*************************");
+                    Console.WriteLine(shopUrl_WWS + pageLink);
+                    Console.WriteLine("********************************************************************");
+
+                    }
+
+                    while (pageLink != null)
+                    {
+
+                        await LoadPageAsync(browser, shopUrl_WWS + pageLink);
+                        Thread.Sleep(delayTimer);
+                        pageLink = WoolworthsExtraction.PageExtraction(await browser.GetSourceAsync());
+                        if (pageLink != null)
+                        {
+                            Console.WriteLine("****************Page Link******************************");
+                            Console.WriteLine(shopUrl_WWS + pageLink);
+                            Console.WriteLine("********************************************************");
+
+                            pageLinkList.Add(pageLink);
+                        }
+                    }
+
+
+                }
+
+                foreach(string b in pageLinkList)
+                {
+                    Console.WriteLine(shopUrl_WWS + b);
+                }
+
             }
+            Console.WriteLine();
+
         }
 
 
