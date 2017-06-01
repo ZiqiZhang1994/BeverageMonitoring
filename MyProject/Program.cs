@@ -172,8 +172,11 @@ namespace MyProject
                     catch (Exception e)
                     {
                         delayTimer += 50;
+                        Console.WriteLine("***********************************************************");
                         Console.WriteLine("Error: " + e);
+                        Console.WriteLine("***********************************************************");
                         Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        Console.WriteLine("***********************************************************");
                         loadfail = false;
                     }
                 }
@@ -209,8 +212,11 @@ namespace MyProject
                         catch (Exception e)
                         {
                             delayTimer1 += 50;
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Error: " + e);
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("***********************************************************");
                             loadfail1 = false;
                         }
                     }
@@ -246,8 +252,11 @@ namespace MyProject
                         catch (Exception e)
                         {
                             delayTimer1 += 50;
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Error: " + e);
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("***********************************************************");
                             loadfail1 = false;
                         }
                     }
@@ -274,8 +283,11 @@ namespace MyProject
                         catch(Exception e)
                         {
                             delayTimer1 += 50;
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Error: " + e);
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("***********************************************************");
                             loadfail1 = false;
                         }
                     }
@@ -348,8 +360,11 @@ namespace MyProject
                     {
                         //error action
                         delayTimer += addedTimer;
+                        Console.WriteLine("***********************************************************");
                         Console.WriteLine("Error: " + e);
+                        Console.WriteLine("***********************************************************");
                         Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        Console.WriteLine("***********************************************************");
                         loadFail = false;
                     }
                 }
@@ -381,8 +396,11 @@ namespace MyProject
                         {
                             //error action
                             delayTimerpagelink += addedTimerpagelink;
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Error: " + e);
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("***********************************************************");
                             loadFailpagelink = false;
                         }
                     }
@@ -424,8 +442,11 @@ namespace MyProject
                             {
                                 //error action
                                 delayTimerpagelink1 += addedTimerpagelink1;
+                                Console.WriteLine("***********************************************************");
                                 Console.WriteLine("Error: " + e);
+                                Console.WriteLine("***********************************************************");
                                 Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                Console.WriteLine("***********************************************************");
                                 loadFailpagelink1 = false;
                             }
                         }
@@ -470,8 +491,11 @@ namespace MyProject
                             {
                                 //error action
                                 delayTimerpagelist += addedTimerpagelist;
+                                Console.WriteLine("***********************************************************");
                                 Console.WriteLine("Error: " + e);
+                                Console.WriteLine("***********************************************************");
                                 Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                Console.WriteLine("***********************************************************");
                                 loadFailpagelist = false;
                             }
                         }
@@ -506,8 +530,11 @@ namespace MyProject
                         {
                             //error action
                             delayTimerpagelist += addedTimerpagelist;
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Error: " + e);
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("***********************************************************");
                             loadFailpagelist = false;
                         }
                     }
@@ -584,8 +611,11 @@ namespace MyProject
                     {
                         //error action
                         delayTimer += addedTimer;
+                        Console.WriteLine("***********************************************************");
                         Console.WriteLine("Error: " + e);
+                        Console.WriteLine("***********************************************************");
                         Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        Console.WriteLine("***********************************************************");
                         loadFail = false;
                     }
                 }
@@ -616,8 +646,11 @@ namespace MyProject
                         {
                             //error action
                             delayTimercatelink += addedTimercatelink;
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Error: " + e);
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("***********************************************************");
                             loadFailcatelink = false;
                         }
                     }
@@ -664,8 +697,11 @@ namespace MyProject
                             {
                                 //error action
                                 delayTimerpagelink += addedTimerpagelink;
+                                Console.WriteLine("***********************************************************");
                                 Console.WriteLine("Error: " + e);
+                                Console.WriteLine("***********************************************************");
                                 Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                Console.WriteLine("***********************************************************");
                                 loadFailpagelink = false;
                             }
                         }
@@ -709,8 +745,11 @@ namespace MyProject
                         {
                             //error action
                             delayTimerpagelinklist += addedTimerpagelinklist;
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Error: " + e);
+                            Console.WriteLine("***********************************************************");
                             Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("***********************************************************");
                             loadFailpagelinklist = false;
                         }
                     }
@@ -787,8 +826,11 @@ namespace MyProject
                     {
                         //error action
                         delayTimer += addedTimer;
+                        Console.WriteLine("***********************************************************");
                         Console.WriteLine("Error: " + e);
+                        Console.WriteLine("***********************************************************");
                         Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        Console.WriteLine("***********************************************************");
                         loadFail = false;
                     }
                 }

@@ -28,6 +28,7 @@ namespace MyProject
                 if (a.IfSale == "Y")
                 {
                     specialProductNum++;
+                    Console.WriteLine("***********************************************************");
                     Console.WriteLine("Product: " + a.Title + " Sale Price: $" + a.Price + " You can save: $" + a.SavedPrice);
                 }
             }
@@ -37,6 +38,7 @@ namespace MyProject
                 if (b.IfSale == "Y")
                 {
                     specialProductNum_Coles++;
+                    Console.WriteLine("***********************************************************");
                     Console.WriteLine("Brand: " + b.Brand +" Product: " + b.Title + " Sale Price: $" + b.Price + " You can save: $" + b.SavedPrice);
                 }
             }
