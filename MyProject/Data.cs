@@ -8,7 +8,7 @@ namespace MyProject
 {
     class Data
     {
-        public Data(string brand, string title, string price, string size, string quantity, string perL, string ifSale, string savedPrice, string barcode)
+        public Data(string brand, string title, string price, string size, string quantity, string perL, string ifSale, string savedPrice, string barcode, string link)
         {
             Brand = brand;
             Title = title;
@@ -19,6 +19,20 @@ namespace MyProject
             IfSale = ifSale;
             SavedPrice = savedPrice;
             Barcode = barcode;
+            Link = link;
+            if(savedPrice != "0")
+            {
+                OriginalPrice = "$" + (Convert.ToDouble(price.Substring(1)) + Convert.ToDouble(savedPrice.Substring(1))).ToString();
+            }
+            else
+            {
+                OriginalPrice = "0";
+            }
+        }
+
+        public Data()
+        {
+
         }
 
         private string _Brand;
@@ -77,6 +91,13 @@ namespace MyProject
             set { _SavedPrice = value; }
         }
 
+        private string _OriginalPrice;
+        public string OriginalPrice
+        {
+            get { return _OriginalPrice; }
+            set { _OriginalPrice = value; }
+        }
+
         private string _Barcode;
         public string Barcode
         {
@@ -84,9 +105,16 @@ namespace MyProject
             set { _Barcode = value; }
         }
 
+        private string _Link;
+        public string Link
+        {
+            get { return _Link; }
+            set { _Link = value; }
+        }
+
         public override string ToString()
         {
-            return "Brand: " + Brand + " Title: " + Title + " Price: " + Price + " Size: " + Size + " Size: " + Quantity + " Litre Price: " + PerL + " Sale?: " + IfSale + " Saved Price: " + SavedPrice + " Barcode: " + Barcode;
+            return "Brand: " + Brand + " Title: " + Title + " Price: " + Price + " Size: " + Size + " Size: " + Quantity + " Litre Price: " + PerL + " Sale?: " + IfSale + " Saved Price: " + SavedPrice + " Original Price: " + OriginalPrice + " Barcode: " + Barcode + " Product Link: " + Link;
         }
     }
 }

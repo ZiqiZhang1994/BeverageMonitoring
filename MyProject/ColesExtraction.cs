@@ -104,7 +104,7 @@ namespace MyProject
             return productLinkList;
         }
 
-        public static Data DetailPageExtraction(string source)
+        public static Data DetailPageExtraction(string source, string link)
         {
             //catch title
             string startTitleKeyWord = "data-ng-bind=\"mainVM.metadata.title\">";
@@ -112,7 +112,10 @@ namespace MyProject
             int startTitleIndex = source.IndexOf(startTitleKeyWord) + startTitleKeyWord.Length;
             int lastTitleIndex = source.IndexOf(endTitleKeyWord);
             string title = source.Substring(startTitleIndex, lastTitleIndex - startTitleIndex);
-
+            if (title == "" || title == " " || title == null)
+            {
+                title = "0";
+            }
             //catch brand
             string startDetailKeyWord = "<span class=\"product-name\" aria-hidden=\"true\" data-ng-bind=\"::productDisplayVM.product.displayNameText\">" + title + "</span>";
             string endDetailKeyWord = "Product display page disclaimer.";
@@ -122,7 +125,10 @@ namespace MyProject
             int endBrandIndex = source.IndexOf(endBrandKeyWord);
 
             string brand = source.Substring(startBrandIndex, endBrandIndex - startBrandIndex);
-
+            if (brand == "" || brand == " " || brand == null)
+            {
+                brand = "0";
+            }
             //cut off necessary part
             int startDetailIndex = source.IndexOf(startDetailKeyWord) + startDetailKeyWord.Length;
             int endDetailIndex = source.IndexOf(endDetailKeyWord);
@@ -148,7 +154,10 @@ namespace MyProject
             {
                 quantity = "0";
             }
-
+            if (quantity == "" || quantity == " " || quantity == null)
+            {
+                quantity = "0";
+            }
             //catch price
             string price;
             if (Convert.ToInt32(quantity) > 1)
@@ -171,7 +180,10 @@ namespace MyProject
             {
                 price = "0";
             }
-
+            if (price == "" || price == " " || price == null)
+            {
+                price = "0";
+            }
             //catch size
             string size;
             string startSizeKeyWord = "<h2 class=\"product-specific-heading\" data-ng-bind=\"::productSpecific.name\">Size:</h2>\n                                <span data-ng-bind-html=\"::productSpecific.value.sanitizeHtml()\">";
@@ -207,6 +219,11 @@ namespace MyProject
                 size = null;
             }
 
+            if (size == "" || size == " " || size == null)
+            {
+                size = "0";
+            }
+
 
             //catch per L
             string startPerLKeyWord = "productDisplayVM.product.unitPrice\">";
@@ -214,10 +231,13 @@ namespace MyProject
             int startPerLIndex = detailDiv.IndexOf(startPerLKeyWord) + startPerLKeyWord.Length;
             int endPerLIndex = detailDiv.IndexOf(endPerLKeyWord);
             string perL = detailDiv.Substring(startPerLIndex, endPerLIndex - startPerLIndex);
-
+            if (perL == "" || perL == " " || perL == null)
+            {
+                perL = "0";
+            }
             //if sale
             string ifSale = "N";
-            string salePrice = "";
+            string salePrice = "0";
             if (detailDiv.IndexOf("data-colrs-fat-controller-responsive-component=\"Save\">") != -1)
             {
                 string startSaveKeyWord = "\n\t\t\t\tsave \n\t\t\t\t<strong>";
@@ -232,7 +252,15 @@ namespace MyProject
                 salePrice = "0";
                 ifSale = "Y";
             }
-
+            if (salePrice.IndexOf("¢") != -1)
+            {
+                salePrice = salePrice.Remove(salePrice.IndexOf("¢"), 1);
+                salePrice = "$" + (Convert.ToDouble(salePrice) / 100).ToString();
+            }
+            if (salePrice == "" || salePrice == " " || salePrice == null)
+            {
+                salePrice = "0";
+            }
 
             //catch barcode
             string startCodeKeyWord = "Code</h2>\n\t\t\t\t\t\t\t\t<p data-ng-bind=\"::productDisplayVM.product.partNumber\">";
@@ -240,8 +268,13 @@ namespace MyProject
             int startCodeIndex = detailDiv.IndexOf(startCodeKeyWord) + startCodeKeyWord.Length;
             int endCodeIndex = detailDiv.IndexOf(endCodeKeyWord);
             string barcode = detailDiv.Substring(startCodeIndex, endCodeIndex - startCodeIndex);
+            if (barcode == "" || barcode == " " || barcode == null)
+            {
+                barcode = "0";
+            }
 
-            Data data = new Data(brand, title, price, size, quantity.ToString(), perL, ifSale, salePrice, barcode);
+            //log in data 
+            Data data = new Data(brand, title, price, size, quantity.ToString(), perL, ifSale, salePrice, barcode, link);
 
             return data;
         }

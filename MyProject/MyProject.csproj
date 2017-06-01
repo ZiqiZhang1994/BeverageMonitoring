@@ -128,6 +128,7 @@
     <Compile Include="ExcelExport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Summary.cs" />
     <Compile Include="TaskExtensions.cs" />
     <Compile Include="WoolworthsExtraction.cs" />
   </ItemGroup>

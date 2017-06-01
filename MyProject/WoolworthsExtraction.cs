@@ -77,8 +77,8 @@ namespace MyProject
 
 
             //cut off the important part
-            string startKeyWord = "<!----><div ng-if=\"!breakpointsService.isInSmallFormat\"";
-            string endKeyWord = "<div class=\"cardList-loadMore\">";
+            string startKeyWord = "<!----><div ng-if=\"!breakpointsService.isInSmallFormat\" class=\"cardList-cards text-left cardList-isotopeContainer\" ng-class=\"{'isCompact' : stampSize == cardSizes.Compact, 'cardList-isotopeContainer': enableIsotope }\" style=\"height: auto;\">";
+            string endKeyWord = "<div class=\"_cardDetail-content\"></div>\n\n</div></wow-card><!---->\n    </div><!---->\n\n    <div class=\"cardList-loadMore\">\n";
             int startIndex = source.IndexOf(startKeyWord) + startKeyWord.Length;
             int lastIndex = source.IndexOf(endKeyWord);
 
@@ -97,13 +97,12 @@ namespace MyProject
             {
                 startGridIndex = linkDiv.IndexOf(startGridKeyWord) + startGridKeyWord.Length;
                 lastGridIndex = linkDiv.IndexOf(endGridKeyWord);
-                string gridDiv = linkDiv.Substring(startGridIndex, lastGridIndex - startGridIndex);
                 if (lastGridIndex != -1)
                 {
                     string detailGrid = linkDiv.Substring(startGridIndex, lastGridIndex - startGridIndex);
 
                     //extrat detail here
-                    if (detailGrid.IndexOf("Shop now") == -1 )
+                    if (detailGrid.IndexOf("inspirationCard-link") == -1 )
                     {
                         if (detailGrid.IndexOf(" View All Sizes") != -1)
                         {
@@ -117,7 +116,7 @@ namespace MyProject
                             string childDiv = detailGrid.Substring(startChildGridIndex, lastChildGridIndex - startChildGridIndex);
 
                             //detail extraction
-                            string startSeperationKeyWord = "<li class=\"productVariants - item clearfix\"";
+                            string startSeperationKeyWord = "<!----><li class=\"productVariants-item clearfix\"";
                             string endSeperationKeyWord = "</wow-shelf-variant>";
                             int startSeperationIndex = 0;
                             int lastSeperationIndex = 0;
@@ -128,194 +127,232 @@ namespace MyProject
                             int startTitleIndex = childDiv.IndexOf(startTitleKeyWord) + startTitleKeyWord.Length;
                             int lastTitleIndex = childDiv.IndexOf(endTitleKeyWord);
                             string title = childDiv.Substring(startTitleIndex, lastTitleIndex - startTitleIndex);
+                            if(title.IndexOf("<br>") != -1)
+                            {
+                                title = title.Replace("<br>", " ");
+                            }
+                            if (title == "" || title == " " || title == null)
+                            {
+                                title = "0";
+                            }
 
                             //catch detail from different quantity
                             while (lastSeperationIndex != -1)
                             {
                                 startSeperationIndex = childDiv.IndexOf(startSeperationKeyWord) + startSeperationKeyWord.Length;
                                 lastSeperationIndex = childDiv.IndexOf(endSeperationKeyWord);
-                                string smallGrid = childDiv.Substring(startSeperationIndex, lastSeperationIndex - startSeperationIndex);
-                                string startSpecialPriceKeyWord = "<div class=\"productVariant-price u-special\" ng-class=\"specialClass\">\n                $";
-
-                                if (smallGrid.IndexOf(startSpecialPriceKeyWord) == -1)
-                                { 
-                                    //catch size
-                                    string startSizeKeyWord = "<div class=\"productVariant-variant\">\n            ";
-                                    string endSizeKeyWord = "\n        </div>\n\n        <div class=\"productVariant-prices\">";
-                                    int startSizeIndex = smallGrid.IndexOf(startSizeKeyWord) + startSizeKeyWord.Length;
-                                    int lastSizeIndex = smallGrid.IndexOf(endSizeKeyWord);
-                                    string size = smallGrid.Substring(startSizeIndex, lastSizeIndex - startSizeIndex);
-
-                                    //if sale?
-                                    string ifSale = "N";
-
-
-                                    //catch price
-                                    string price = "0";
-                                    string startPriceKeyWord = "<div class=\"productVariant-price\" ng-class=\"specialClass\">\n                $";
-                                    string endPriceKeyWord = "\n        </div>\n\n        <div class=\"productVariant-prices\">";
-
+                              
+                                if (lastSeperationIndex != -1)
+                                {
+                                    string smallGrid = childDiv.Substring(startSeperationIndex, lastSeperationIndex - startSeperationIndex);
+                                    string startSpecialPriceKeyWord = "<div class=\"productVariant-price u-special\" ng-class=\"specialClass\">\n                ";
+                                    if (smallGrid.IndexOf(startSpecialPriceKeyWord) == -1)
+                                    {
+                                        //catch size
+                                        string startSizeKeyWord = "<div class=\"productVariant-variant\">\n            ";
+                                        string endSizeKeyWord = "\n        </div>\n\n        <div class=\"productVariant-prices\">";
+                                        int startSizeIndex = smallGrid.IndexOf(startSizeKeyWord) + startSizeKeyWord.Length;
+                                        int lastSizeIndex = smallGrid.IndexOf(endSizeKeyWord);
+                                        string size = smallGrid.Substring(startSizeIndex, lastSizeIndex - startSizeIndex);
+                                        if (size == "" || size == " " || size == null)
+                                        {
+                                            size = "0";
+                                        }
+                                        //if sale?
+                                        string ifSale = "N";
 
 
-                                    int startPriceIndex = smallGrid.IndexOf(startPriceKeyWord) + startPriceKeyWord.Length;
-                                    int lastPriceIndex = smallGrid.IndexOf(endPriceKeyWord);
-                                    price = smallGrid.Substring(startPriceIndex, lastPriceIndex - startPriceIndex);
+                                        //catch price
+                                        string startPriceKeyWord = "<div class=\"productVariant-price\" ng-class=\"specialClass\">\n                ";
+                                        string endPriceKeyWord = "\n            </div>\n\n            <div class=\"productVariant-cup\" ng-show=\"product.HasCupPrice\">\n";
+                                        int startPriceIndex = smallGrid.IndexOf(startPriceKeyWord) + startPriceKeyWord.Length;
+                                        int lastPriceIndex = smallGrid.IndexOf(endPriceKeyWord);
+                                        string price = smallGrid.Substring(startPriceIndex, lastPriceIndex - startPriceIndex);
+                                        if (price == "" || price == " " || price == null)
+                                        {
+                                            price = "0";
+                                        }
 
+                                        //catch perL
+                                        string startPerLKeyWord = "<div class=\"productVariant-cup\" ng-show=\"product.HasCupPrice\">\n                ";
+                                        string endPerLKeyWord = "\n            </div>\n        </div>\n    </div>\n\n    <div class=\"productVariant-thumbnail\">\n";
+                                        int startPerLIndex = smallGrid.IndexOf(startPerLKeyWord) + startPerLKeyWord.Length;
+                                        int lastPerLIndex = smallGrid.IndexOf(endPerLKeyWord);
+                                        string perL = smallGrid.Substring(startPerLIndex, lastPerLIndex - startPerLIndex);
+                                        if (perL == "" || perL == " " || perL == null)
+                                        {
+                                            perL = "0";
+                                        }
+                                        //catch ImageUrl
+                                        string imageUrl = "";
+                                        string startImageUrlKeyWord = "<!----><img ng-if=\"size != 'xsmall'\" ng-src=\"";
+                                        string endImageUrlKeyWord = "\" alt=\"";
+                                        int startImageUrlIndex = smallGrid.IndexOf(startImageUrlKeyWord) + startImageUrlKeyWord.Length;
+                                        int lastImageUrlIndex = smallGrid.IndexOf(endImageUrlKeyWord);
+                                        if (lastImageUrlIndex < startImageUrlIndex)
+                                        {
+                                            lastImageUrlIndex = smallGrid.IndexOf(endImageUrlKeyWord, lastImageUrlIndex + 1);
+                                            imageUrl = smallGrid.Substring(startImageUrlIndex, lastImageUrlIndex - startImageUrlIndex);
+                                        }
+                                        else
+                                        {
+                                            imageUrl = smallGrid.Substring(startImageUrlIndex, lastImageUrlIndex - startImageUrlIndex);
+                                        }
+                                        if (imageUrl == "" || imageUrl == " " || imageUrl == null)
+                                        {
+                                            imageUrl = "0";
+                                        }
 
-                                    //catch perL
-                                    string startPerLKeyWord = "<div class=\"productVariant-cup\" ng-show=\"product.HasCupPrice\">\n                $";
-                                    string endPerLKeyWord = "\n            </div>\n        </div>\n    </div>\n\n    <div class=\"productVariant-thumbnail\">\n";
-                                    int startPerLIndex = smallGrid.IndexOf(startPerLKeyWord) + startPerLKeyWord.Length;
-                                    int lastPerLIndex = smallGrid.IndexOf(endPerLKeyWord);
-                                    string perL = smallGrid.Substring(startPerLIndex, lastPerLIndex - startPerLIndex);
-
-                                    //catch ImageUrl
-                                    string startImageUrlKeyWord = "<!----><img ng-if=\"size != 'xsmall'\" ng-src=\"";
-                                    string endImageUrlKeyWord = "\" alt=\"" + title + "\"";
-                                    int startImageUrlIndex = smallGrid.IndexOf(startImageUrlKeyWord) + startImageUrlKeyWord.Length;
-                                    int lastImageUrlIndex = smallGrid.IndexOf(endImageUrlKeyWord);
-                                    string imageUrl = smallGrid.Substring(startImageUrlIndex, lastImageUrlIndex - startImageUrlIndex);
-
-                                    Data_WWs tempWWsData = new Data_WWs(title, price, size, "1", perL, ifSale, "0", imageUrl);
-
-                                    childDiv = childDiv.Remove(startSeperationIndex - startSeperationKeyWord.Length, startSeperationKeyWord.Length + smallGrid.Length + endSeperationKeyWord.Length);
-
+                                        //data log
+                                        Data_WWs tempWWsData = new Data_WWs(title, price, size, "1", perL, ifSale, "0", "0", imageUrl);
+                                        productLinkList.Add(tempWWsData);
+                                        childDiv = childDiv.Remove(startSeperationIndex - startSeperationKeyWord.Length, startSeperationKeyWord.Length + smallGrid.Length + endSeperationKeyWord.Length);
+                                        Console.WriteLine(tempWWsData.ToString());
+                                        
+                                    }
+                                    else
+                                    {
+                                        childDiv = childDiv.Remove(startSeperationIndex - startSeperationKeyWord.Length, startSeperationKeyWord.Length + smallGrid.Length + endSeperationKeyWord.Length);
+                                    }
                                 }
                             } 
                         }
+                        else
+                        {
+                            //catch title
+                            string startTitleKeyWord = "<!----><span class=\"shelfProductStamp-productDetailsLink\" ng-if=\"displaySmallFormatVersion() || isdetail || !hasVariants\" ng-bind-html=\"::(product.SmallFormatDescription | sanitize)\">";
+                            string endTitleKeyWord = "</span><!---->\n                        <br>\n                        <!---->";
+                            int startTitleIndex = detailGrid.IndexOf(startTitleKeyWord) + startTitleKeyWord.Length;
+                            int lastTitleIndex = detailGrid.IndexOf(endTitleKeyWord);
+                            string title = detailGrid.Substring(startTitleIndex, lastTitleIndex - startTitleIndex);
+                            if (title == "" || title == " " || title == null)
+                            {
+                                title = "0";
+                            }
+                            //catch size
+                            string startSizeKeyWord = "<!----><span class=\"shelfProductStamp-productDetailsPackageSize\" ng-if=\"displaySmallFormatVersion() || isdetail || !hasVariants\"> ";
+                            string endSizeKeyWord = "</span><!---->\n                    </a><!---->\n                    <!---->\n                </h3>\n\n                <!---->\n            </div>\n";
+                            int startSizeIndex = detailGrid.IndexOf(startSizeKeyWord) + startSizeKeyWord.Length;
+                            int lastSizeIndex = detailGrid.IndexOf(endSizeKeyWord);
+                            string size = detailGrid.Substring(startSizeIndex, lastSizeIndex - startSizeIndex);
+                            if (size == "" || size == " " || size == null)
+                            {
+                                size = "0";
+                            }
+
+
+
+                            //if sale? & price
+                            string ifSale = "N";
+                            string price = "0";
+                            string savedPrice = "0";
+                            if (detailGrid.IndexOf("<span class=\"pricingContainer-saveHeading\">") != -1)
+                            {
+                                ifSale = "Y";
+                                //catch price
+                                string startPriceKeyWord = "<span class=\"pricingContainer-priceAmount u-special\" ng-class=\"::specialClass\">";
+                                string endPriceKeyWord = "</span>\n        <!----><span ng-if=\"::product.CupPrice\" class=\"pricingContainer-priceCup\">\n";
+                                int startPriceIndex = detailGrid.IndexOf(startPriceKeyWord) + startPriceKeyWord.Length;
+                                int lastPriceIndex = detailGrid.IndexOf(endPriceKeyWord);
+                                price = detailGrid.Substring(startPriceIndex, lastPriceIndex - startPriceIndex);
+                                if (price == "" || price == " " || price == null)
+                                {
+                                    price = "0";
+                                }
+                                //catch saved price
+                                string startSavedPriceKeyWord = "</span>\n            <span class=\"pricingContainer-savePrice\">";
+                                string endSavedPriceKeyWord = "</span>\n        </div>\n    </div><!---->\n    <div class=\"pricingContainer-priceContainer\">\n";
+                                int startSavedPriceIndex = detailGrid.IndexOf(startSavedPriceKeyWord) + startSavedPriceKeyWord.Length;
+                                int lastSavedPriceIndex = detailGrid.IndexOf(endSavedPriceKeyWord);
+                                savedPrice = detailGrid.Substring(startSavedPriceIndex, lastSavedPriceIndex - startSavedPriceIndex);
+                                if(savedPrice.IndexOf("¢") != -1)
+                                {
+                                    savedPrice = savedPrice.Remove(savedPrice.IndexOf("¢"), 1);
+                                    savedPrice = "$" + (Convert.ToDouble(savedPrice) / 100).ToString();
+                                }
+                                if (savedPrice == "" || savedPrice == " " || savedPrice == null)
+                                {
+                                    savedPrice = "0";
+                                }
+
+                            }
+                            else
+                            {
+                                //catch price
+                                string startPriceKeyWord = "<span class=\"pricingContainer-priceAmount\" ng-class=\"::specialClass\">";
+                                string endPriceKeyWord = "</span>\n        <!----><span ng-if=\"::product.CupPrice\" class=\"pricingContainer-priceCup\">\n";
+                                string secondEndPriceKeyWord = "</span>\n        <!---->\n    </div>\n</div><!----></wow-shelf-product-pricing-container>";
+                                int startPriceIndex = detailGrid.IndexOf(startPriceKeyWord) + startPriceKeyWord.Length;
+                                int lastPriceIndex = detailGrid.IndexOf(endPriceKeyWord);
+                                if(lastPriceIndex == -1)
+                                {
+                                    lastPriceIndex = detailGrid.IndexOf(secondEndPriceKeyWord);
+                                }
+                                price = detailGrid.Substring(startPriceIndex, lastPriceIndex - startPriceIndex);
+                                if (price == "" || price == " " || price == null)
+                                {
+                                    price = "0";
+                                }
+                            }
+
+                            //catch perL
+                            string perL = "0";
+                            string startPerLKeyWord = "<!----><span ng-if=\"::product.CupPrice\" class=\"pricingContainer-priceCup\">\n            ";
+                            string endPerLKeyWord = "\n        </span><!---->\n    </div>\n</div><!----></wow-shelf-product-pricing-container>\n\n";
+                            int startPerLIndex = detailGrid.IndexOf(startPerLKeyWord) + startPerLKeyWord.Length;
+                            int lastPerLIndex = detailGrid.IndexOf(endPerLKeyWord);
+                            if(lastPerLIndex != -1)
+                            {
+                                 perL = detailGrid.Substring(startPerLIndex, lastPerLIndex - startPerLIndex);
+                            }
+                            if (perL == "" || perL == " " || perL == null)
+                            {
+                                perL = "0";
+                            }
+                            //catch quantity special price
+                            string quantitySpecialPrice = "0";
+                            if (detailGrid.IndexOf("<!----><span ng-if=\"!enabledCenterProductTag || !tag.TagLink\" ng-bind-html=\"::tag.displayContent\" ng-click=\"htmlTagClick($event)\" class=\"shelfProductStamp-centerProductTagHtmlInner\"><span style=\"COLOR: #e2001a\">") == -1 && detailGrid.IndexOf("<span style=\"COLOR: #e2001a\">") != -1)
+                            {
+                                string startQuantitySpecialKeyWord = "<span style=\"COLOR: #e2001a\">";
+                                string endQuantitySpecialKeyWord = "</a></span><!---->\n    </div><!---->\n</div><!----></wow-shelf-product-producttag><!---->\n";
+                                int startQuantitySpecialIndex = detailGrid.IndexOf(startQuantitySpecialKeyWord) + startQuantitySpecialKeyWord.Length;
+                                int lastQuantitySpecialIndex = detailGrid.IndexOf(endQuantitySpecialKeyWord);
+
+                                quantitySpecialPrice = detailGrid.Substring(startQuantitySpecialIndex, lastQuantitySpecialIndex - startQuantitySpecialIndex);
+                                quantitySpecialPrice = quantitySpecialPrice.Remove(quantitySpecialPrice.IndexOf("</span>", "</span>".Length));
+                                ifSale = "Y";
+                            }
+                            if (quantitySpecialPrice == "" || quantitySpecialPrice == " " || quantitySpecialPrice == null)
+                            {
+                                quantitySpecialPrice = "0";
+                            }
+
+                            //catch ImageUrl
+                            string startImageUrlKeyWord = "<div class=\"shelfProductStamp-imageTagsContainer\" ng-switch=\"::(!!product.ImageTag.TagLink)\">\n                <img ng-src=\"";
+                            string endImageUrlKeyWord = "\" alt=\"\" class=\"shelfProductStamp-productImage";
+                            int startImageUrlIndex = detailGrid.IndexOf(startImageUrlKeyWord) + startImageUrlKeyWord.Length;
+                            int lastImageUrlIndex = detailGrid.IndexOf(endImageUrlKeyWord);
+                            string imageUrl = detailGrid.Substring(startImageUrlIndex, lastImageUrlIndex - startImageUrlIndex);
+                            if (imageUrl == "" || imageUrl == " " || imageUrl == null)
+                            {
+                                imageUrl = "0";
+                            }
+                            //data log
+                            Data_WWs tempWWsData = new Data_WWs(title, price, size, "1", perL, ifSale, savedPrice, quantitySpecialPrice, imageUrl);
+                            productLinkList.Add(tempWWsData);
+                            Console.WriteLine(tempWWsData.ToString());
+                        }
+
                     }
 
-
-
-
-
-
+                    //remove used part
                     linkDiv = linkDiv.Remove(startGridIndex - startGridKeyWord.Length, startGridKeyWord.Length + detailGrid.Length + endGridKeyWord.Length);
                 }
             }
 
-            return null;
+            return productLinkList;
         }
 
-        private static Data ViewMoreDetailPageExtraction(string source)
-        {
 
-            //catch quantity
-            string quantity;
-            string startQuantityKeyWord = "product-qty\">";
-            string endQuantityKeyWord = "</span>\n\t\t\t<span class=\"product-text\">for</span>\n\t\t\t<span>";
-            string endQuantityKeyWord2 = "</span>\n\t\t\t<span class=\"accessibility\" data-ng-bind=\"::fatControllerVM.product.prodA11yHeading\">";
-            int startQuantityIndex = detailDiv.IndexOf(startQuantityKeyWord) + startQuantityKeyWord.Length;
-            int endQuantityIndex = detailDiv.IndexOf(endQuantityKeyWord);
-            int endQuantityIndex2 = detailDiv.IndexOf(endQuantityKeyWord2);
-            if (endQuantityIndex == -1 && endQuantityIndex2 != -1)
-            {
-                quantity = detailDiv.Substring(startQuantityIndex, endQuantityIndex2 - startQuantityIndex);
-            }
-            else if (endQuantityIndex2 == -1 && endQuantityIndex != -1)
-            {
-                quantity = detailDiv.Substring(startQuantityIndex, endQuantityIndex - startQuantityIndex);
-            }
-            else
-            {
-                quantity = "0";
-            }
-
-            //catch price
-            string price;
-            if (Convert.ToInt32(quantity) > 1)
-            {
-                string startPriceKeyWord = "product-price\">";
-                string endPriceKeyWord = "</strong></span>\n\t\t\t<span aria-hidden=\"true\">";
-                int startPriceIndex = detailDiv.IndexOf(startPriceKeyWord) + startPriceKeyWord.Length;
-                int endPriceIndex = detailDiv.IndexOf(endPriceKeyWord);
-                price = detailDiv.Substring(startPriceIndex, endPriceIndex - startPriceIndex);
-            }
-            else if (Convert.ToInt32(quantity) == 1)
-            {
-                string startPriceKeyWord = "product-price\">";
-                string endPriceKeyWord = "</strong>\n\t\t\t<span class=\"accessibility\">to the trolley.</span>\n\t\t\t<!---->";
-                int startPriceIndex = detailDiv.IndexOf(startPriceKeyWord) + startPriceKeyWord.Length;
-                int endPriceIndex = detailDiv.IndexOf(endPriceKeyWord);
-                price = detailDiv.Substring(startPriceIndex, endPriceIndex - startPriceIndex);
-            }
-            else
-            {
-                price = "0";
-            }
-
-            //catch size
-            string size;
-            string startSizeKeyWord = "<h2 class=\"product-specific-heading\" data-ng-bind=\"::productSpecific.name\">Size:</h2>\n                                <span data-ng-bind-html=\"::productSpecific.value.sanitizeHtml()\">";
-            string endSizeKeyWord = "</span>";
-            string startSizeKeyWord2 = "productDisplayVM.product.showOnlineSizeDesc\" data-ng-bind=\"::productDisplayVM.product.sizeDescription\">";
-            string endSizeKeyWord2 = "</span><!----> \n";
-            int startSizeIndex = detailDiv.IndexOf(startSizeKeyWord);
-            int startSizeIndex2 = detailDiv.IndexOf(startSizeKeyWord2);
-            if (startSizeIndex > -1 && startSizeIndex2 == -1)
-            {
-                startSizeIndex = startSizeIndex + startSizeKeyWord.Length;
-                string cutStep1 = detailDiv.Substring(startSizeIndex);
-                int endSizeIndex = cutStep1.IndexOf(endSizeKeyWord);
-                size = cutStep1.Remove(endSizeIndex);
-            }
-            else if (startSizeIndex2 > -1 && startSizeIndex == -1)
-            {
-
-                startSizeIndex2 = detailDiv.IndexOf(startSizeKeyWord2) + startSizeKeyWord2.Length;
-                string cutStep2 = detailDiv.Substring(startSizeIndex2);
-                int endSizeIndex2 = cutStep2.IndexOf(endSizeKeyWord2);
-                size = cutStep2.Remove(endSizeIndex2);
-            }
-            else if (startSizeIndex > -1 && startSizeIndex2 > -1)
-            {
-                startSizeIndex2 = startSizeIndex2 + startSizeKeyWord2.Length;
-                string cutStep2 = detailDiv.Substring(startSizeIndex2);
-                int endSizeIndex2 = cutStep2.IndexOf(endSizeKeyWord2);
-                size = cutStep2.Remove(endSizeIndex2);
-            }
-            else
-            {
-                size = null;
-            }
-
-
-            //catch per L
-            string startPerLKeyWord = "productDisplayVM.product.unitPrice\">";
-            string endPerLKeyWord = "</span>\n\t                                <span class=\"accessibility-inline\"";
-            int startPerLIndex = detailDiv.IndexOf(startPerLKeyWord) + startPerLKeyWord.Length;
-            int endPerLIndex = detailDiv.IndexOf(endPerLKeyWord);
-            string perL = detailDiv.Substring(startPerLIndex, endPerLIndex - startPerLIndex);
-
-            //if sale
-            string ifSale = "N";
-            string salePrice = "";
-            if (detailDiv.IndexOf("data-colrs-fat-controller-responsive-component=\"Save\">") != -1)
-            {
-                string startSaveKeyWord = "\n\t\t\t\tsave \n\t\t\t\t<strong>";
-                string endSaveKeyWord = "</strong>\n\t\t\t</span>";
-                int startSaveIndex = detailDiv.IndexOf(startSaveKeyWord) + startSaveKeyWord.Length;
-                int endSaveIndex = detailDiv.IndexOf(endSaveKeyWord);
-                salePrice = detailDiv.Substring(startSaveIndex, endSaveIndex - startSaveIndex);
-                ifSale = "Y";
-            }
-            else if (Convert.ToInt32(quantity) > 1)
-            {
-                salePrice = "0";
-                ifSale = "Y";
-            }
-
-
-            //catch barcode
-            string startCodeKeyWord = "Code</h2>\n\t\t\t\t\t\t\t\t<p data-ng-bind=\"::productDisplayVM.product.partNumber\">";
-            string endCodeKeyWord = "</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\n";
-            int startCodeIndex = detailDiv.IndexOf(startCodeKeyWord) + startCodeKeyWord.Length;
-            int endCodeIndex = detailDiv.IndexOf(endCodeKeyWord);
-            string barcode = detailDiv.Substring(startCodeIndex, endCodeIndex - startCodeIndex);
-
-            Data data = new Data(brand, title, price, size, quantity.ToString(), perL, ifSale, salePrice, barcode);
-
-            return data;
-        }
     }
 }

@@ -8,7 +8,7 @@ namespace MyProject
 {
     class Data_WWs
     {
-        public Data_WWs(string title, string price, string size, string quantity, string perL, string ifSale, string savedPrice, string imageUrl)
+        public Data_WWs(string title, string price, string size, string quantity, string perL, string ifSale, string savedPrice, string quantitySpecial, string imageUrl)
         {
             Title = title;
             Price = price;
@@ -17,7 +17,21 @@ namespace MyProject
             PerL = perL;
             IfSale = ifSale;
             SavedPrice = savedPrice;
+            QuantitySpecial = quantitySpecial;
             ImageUrl = imageUrl;
+            if (savedPrice != "0")
+            {
+                OriginalPrice = "$" + (Convert.ToDouble(price.Substring(1)) + Convert.ToDouble(savedPrice.Substring(1))).ToString();
+            }
+            else
+            {
+                OriginalPrice = "0";
+            }
+        }
+
+        public Data_WWs()
+        {
+
         }
 
         private string _Title;
@@ -69,6 +83,20 @@ namespace MyProject
             set { _SavedPrice = value; }
         }
 
+        private string _OriginalPrice;
+        public string OriginalPrice
+        {
+            get { return _OriginalPrice; }
+            set { _OriginalPrice = value; }
+        }
+
+        private string _QuantitySpecial;
+        public string QuantitySpecial
+        {
+            get { return _QuantitySpecial; }
+            set { _QuantitySpecial = value; }
+        }
+
         private string _ImageUrl;
         public string ImageUrl
         {
@@ -79,7 +107,7 @@ namespace MyProject
 
         public override string ToString()
         {
-            return " Title: " + Title + " Price: " + Price + " Size: " + Size + " Size: " + Quantity + " Litre Price: " + PerL + " Sale?: " + IfSale + " Saved Price: " + SavedPrice + "Image Url: " + ImageUrl;
+            return " Title: " + Title + " Price: " + Price + " Size: " + Size + " Size: " + Quantity + " Litre Price: " + PerL + " Sale?: " + IfSale + " Saved Price: " + SavedPrice + " Original Price: " + OriginalPrice + " Quantity Special: " + QuantitySpecial + " Image Url: " + ImageUrl;
         }
     }
 }

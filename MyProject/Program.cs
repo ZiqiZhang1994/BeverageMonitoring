@@ -13,14 +13,17 @@ namespace MyProject
 {
     public class Program
     {
+        //preset url
         private const string TestUrl = "https://www.google.com/";
         private const string shopUrl = "https://shop.coles.com.au";
         private const string shopUrl_WWS = "https://www.woolworths.com.au";
+
+
         public static int Main(string[] args)
         {
             bool isRunning = true; // For exit function
             string MenuSelection = ""; // For MenuSelection Case Function
-            string Response = "";
+            string Response = "";//read choice of menu
 
             Console.WriteLine("Test network for {0}", TestUrl);
             Console.WriteLine("You may see a lot of Chromium debugging output, please wait...");
@@ -52,6 +55,13 @@ namespace MyProject
                         break;
                     case "3":
                         WoolworthsTestMainAsync("cachePatch3");
+                        break;
+                    case "4":
+                        WoolworthsRealTestMainAsync("cachePatch3");
+                        break;
+                    case "5":
+                        Summary.SpecialProductSummary();
+                        Console.ReadKey();
                         break;
                     // Exit Function
                     case "x":
@@ -98,7 +108,8 @@ namespace MyProject
 
         private static async void DemoMainAsync(string cachePath)
         {
-            int delayTimer = 2500;
+            //parameters
+            int delayTimer = 50;
             List<string> cateLinkList = new List<string>();
             List<string> productPageLinkList = new List<string>();
             List<Data> dataList = new List<Data>();
@@ -127,15 +138,9 @@ namespace MyProject
 
                 var onUi = Cef.CurrentlyOnThread(CefThreadIds.TID_UI);
 
-                // For Google.com pre-pupulate the search text box
-                await browser.EvaluateScriptAsync("document.getElementById('lst-ib').value = 'CefSharp Was Here!'");
 
                 // Wait for the screenshot to be taken,
-                // if one exists ignore it, wait for a new one to make sure we have the most up to date
-                //await browser.ScreenshotAsync(true).ContinueWith(DisplayBitmap);
 
-                //await LoadPageAsync(browser, "https://shop.coles.com.au/a/a-national/everything/browse/drinks?pageNumber=1");
-                //Thread.Sleep(delayTimer);
 
                 //Gets a wrapper around the underlying CefBrowser instance
                 var cefBrowser = browser.GetBrowser();
@@ -151,9 +156,29 @@ namespace MyProject
                 string pageLink = "";
                 List<string> pageLinkList = new List<string>();
                 pageLinkList.Add(a);
-                await LoadPageAsync(browser, shopUrl + a);
-                Thread.Sleep(delayTimer);
-                pageLink = ColesExtraction.PageExtraction(await browser.GetSourceAsync());
+
+
+                //extract first page
+                bool loadfail = false;
+                while (loadfail == false)
+                {
+                    try
+                    {
+                        await LoadPageAsync(browser, shopUrl + a);
+                        Thread.Sleep(delayTimer);
+                        pageLink = ColesExtraction.PageExtraction(await browser.GetSourceAsync());
+                        loadfail = true;
+                    }
+                    catch (Exception e)
+                    {
+                        delayTimer += 50;
+                        Console.WriteLine("Error: " + e);
+                        Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        loadfail = false;
+                    }
+                }
+
+
 
                 if (pageLink != null && pageLink != "")
                 {
@@ -167,12 +192,30 @@ namespace MyProject
                 Console.WriteLine(shopUrl + pageLink);
                 Console.WriteLine("********************************************************************");
 
+
                 while (pageLink != null)
                 {
+                    int delayTimer1 = 50;
+                    bool loadfail1 = false;
+                    while (loadfail1 == false)
+                    {
+                        try
+                        {
+                            await LoadPageAsync(browser, shopUrl + pageLink);
+                            Thread.Sleep(delayTimer1);
+                            pageLink = ColesExtraction.PageExtraction(await browser.GetSourceAsync());
+                            loadfail1 = true;
+                        }
+                        catch (Exception e)
+                        {
+                            delayTimer1 += 50;
+                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            loadfail1 = false;
+                        }
+                    }
 
-                    await LoadPageAsync(browser, shopUrl + pageLink);
-                    Thread.Sleep(delayTimer);
-                    pageLink = ColesExtraction.PageExtraction(await browser.GetSourceAsync());
+
                     if (pageLink != null)
                     {
                         Console.WriteLine("****************Page Link******************************");
@@ -185,36 +228,73 @@ namespace MyProject
 
                 foreach (string b in pageLinkList)
                 {
-                    await LoadPageAsync(browser, shopUrl + b);
-                    Thread.Sleep(delayTimer);
-                    Console.WriteLine("*****************Page link list****************************");
-                    Console.WriteLine(shopUrl + b);
-                    Console.WriteLine("***********************************************************");
+                    int delayTimer1 = 50;
+                    bool loadfail1 = false;
+                    while (loadfail1 == false)
+                    {
+                        try
+                        {
+                            await LoadPageAsync(browser, shopUrl + b);
+                            Thread.Sleep(delayTimer1);
+                            Console.WriteLine("*****************Page link list****************************");
+                            Console.WriteLine(shopUrl + b);
+                            Console.WriteLine("***********************************************************");
 
-                    productPageLinkList.AddRange(ColesExtraction.ProductLinkExtraction(await browser.GetSourceAsync()));
+                            productPageLinkList.AddRange(ColesExtraction.ProductLinkExtraction(await browser.GetSourceAsync()));
+                            loadfail1 = true;
+                        }
+                        catch (Exception e)
+                        {
+                            delayTimer1 += 50;
+                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            loadfail1 = false;
+                        }
+                    }
+
+
                 }
 
                 foreach (string c in productPageLinkList)
                 {
-                    await LoadPageAsync(browser, shopUrl + c);
-                    Thread.Sleep(delayTimer);
-                    Console.WriteLine("*****************Product detail page link list****************************");
-                    Console.WriteLine(shopUrl + c);
-                    Console.WriteLine("***********************************************************");
-                    dataList.Add(ColesExtraction.DetailPageExtraction(await browser.GetSourceAsync()));
+                    int delayTimer1 = 50;
+                    bool loadfail1 = false;
+                    while (loadfail1 == false)
+                    {
+                        try
+                        {
+                            await LoadPageAsync(browser, shopUrl + c);
+                            Thread.Sleep(delayTimer1);
+                            Console.WriteLine("*****************Product detail page link list****************************");
+                            Console.WriteLine(shopUrl + c);
+                            Console.WriteLine("***********************************************************");
+                            dataList.Add(ColesExtraction.DetailPageExtraction(await browser.GetSourceAsync(), shopUrl + c));
+                            loadfail1 = true;
+                        }
+                        catch(Exception e)
+                        {
+                            delayTimer1 += 50;
+                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            loadfail1 = false;
+                        }
+                    }
+
                 }
                 //demo end
-                ExcelExport.AutomateExcel(dataList);
+                ExcelExport.AutomateExcel_Test(dataList);
             }
         }
 
         private static async void FullColesMainAsync(string cachePath)
         {
-            int delayTimer = 2500;
+            //parameters
+            int delayTimer = 0;
             List<string> cateLinkList = new List<string>();
             List<string> productPageLinkList = new List<string>();
             List<Data> dataList = new List<Data>();
             var browserSettings = new BrowserSettings();
+
             //Reduce rendering speed to one frame per second so it's easier to take screen shots
             browserSettings.WindowlessFrameRate = 1;
             var requestContextSettings = new RequestContextSettings { CachePath = cachePath };
@@ -224,17 +304,6 @@ namespace MyProject
             using (var requestContext = new RequestContext(requestContextSettings))
             using (var browser = new ChromiumWebBrowser(TestUrl, browserSettings, requestContext))
             {
-                //if (zoomLevel > 1)
-                //{
-                //    browser.FrameLoadStart += (s, argsi) =>
-                //    {
-                //        var b = (ChromiumWebBrowser)s;
-                //        if (argsi.Frame.IsMain)
-                //        {
-                //            b.SetZoomLevel(zoomLevel);
-                //        }
-                //    };
-                //}
                 await LoadPageAsync(browser);
 
                 //Check preferences on the CEF UI Thread
@@ -250,16 +319,6 @@ namespace MyProject
 
                 var onUi = Cef.CurrentlyOnThread(CefThreadIds.TID_UI);
 
-                // For Google.com pre-pupulate the search text box
-                await browser.EvaluateScriptAsync("document.getElementById('lst-ib').value = 'CefSharp Was Here!'");
-
-                // Wait for the screenshot to be taken,
-                // if one exists ignore it, wait for a new one to make sure we have the most up to date
-                //await browser.ScreenshotAsync(true).ContinueWith(DisplayBitmap);
-
-                await LoadPageAsync(browser, "https://shop.coles.com.au/a/a-national/everything/browse/drinks?pageNumber=1");
-                Thread.Sleep(delayTimer);
-
                 //Gets a wrapper around the underlying CefBrowser instance
                 var cefBrowser = browser.GetBrowser();
                 // Gets a warpper around the CefBrowserHost instance
@@ -269,19 +328,66 @@ namespace MyProject
                 //You can call Invalidate to redraw/refresh the image
                 cefHost.Invalidate(PaintElementType.View);
 
+                //all drink category links extraction
+                bool loadFail = false;
+                int addedTimer = 100;
+                while(loadFail == false)
+                {
+                    try
+                    {
+                        //web page load and extract
+                        await LoadPageAsync(browser, "https://shop.coles.com.au/a/a-national/everything/browse/drinks?pageNumber=1");
+                        Thread.Sleep(delayTimer);
 
-                
-                // Wait for the screenshot to be taken.
-                cateLinkList = ColesExtraction.FirstCategoryLinkExtraction(await browser.GetSourceAsync());
-                
+                        cateLinkList = ColesExtraction.FirstCategoryLinkExtraction(await browser.GetSourceAsync());
+
+                        //loading flag
+                        loadFail = true;
+                    }
+                    catch(Exception e)
+                    {
+                        //error action
+                        delayTimer += addedTimer;
+                        Console.WriteLine("Error: " + e);
+                        Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        loadFail = false;
+                    }
+                }
+
+                //start to extract each page link of each category
                 foreach (string a in cateLinkList)
                 {
                     string pageLink = "";
                     List<string> pageLinkList = new List<string>();
                     pageLinkList.Add(a);
-                    await LoadPageAsync(browser, shopUrl + a);
-                    Thread.Sleep(delayTimer);
-                    pageLink = ColesExtraction.PageExtraction(await browser.GetSourceAsync());
+                    //loop for reload web
+                    int delayTimerpagelink = 10;
+                    bool loadFailpagelink = false;
+                    int addedTimerpagelink = 100;
+                    //start from first page of category
+                    while (loadFailpagelink == false)
+                    {
+                        try
+                        {
+                            //web page load and extract
+                            await LoadPageAsync(browser, shopUrl + a);
+                            Thread.Sleep(delayTimerpagelink);
+                            pageLink = ColesExtraction.PageExtraction(await browser.GetSourceAsync());
+
+                            //loading flag
+                            loadFailpagelink = true;
+                        }
+                        catch (Exception e)
+                        {
+                            //error action
+                            delayTimerpagelink += addedTimerpagelink;
+                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            loadFailpagelink = false;
+                        }
+                    }
+
+
 
                     if (pageLink != null && pageLink != "")
                     {
@@ -295,12 +401,38 @@ namespace MyProject
                     Console.WriteLine(shopUrl + pageLink);
                     Console.WriteLine("********************************************************************");
 
+                    //extract follow next page of current category
                     while (pageLink != null)
                     {
+                        //loop for reload web
+                        int delayTimerpagelink1 = 10;
+                        bool loadFailpagelink1 = false;
+                        int addedTimerpagelink1 = 100;
+                        while (loadFailpagelink1 == false)
+                        {
+                            try
+                            {
+                                //web page load and extract
+                                await LoadPageAsync(browser, shopUrl + pageLink);
+                                Thread.Sleep(delayTimerpagelink1);
+                                pageLink = ColesExtraction.PageExtraction(await browser.GetSourceAsync());
 
-                        await LoadPageAsync(browser, shopUrl + pageLink);
-                        Thread.Sleep(delayTimer);
-                        pageLink = ColesExtraction.PageExtraction(await browser.GetSourceAsync());
+                                //loading flag
+                                loadFailpagelink1 = true;
+                            }
+                            catch (Exception e)
+                            {
+                                //error action
+                                delayTimerpagelink1 += addedTimerpagelink1;
+                                Console.WriteLine("Error: " + e);
+                                Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                loadFailpagelink1 = false;
+                            }
+                        }
+
+
+
+
                         if (pageLink != null)
                         {
                             Console.WriteLine("****************Page Link******************************");
@@ -311,41 +443,93 @@ namespace MyProject
                         }
                     }
 
+                    //extract each product link from all page
                     foreach (string b in pageLinkList)
                     {
-                        await LoadPageAsync(browser, shopUrl + b);
-                        Thread.Sleep(delayTimer);
-                        Console.WriteLine("*****************Page link list****************************");
-                        Console.WriteLine(shopUrl + b);
-                        Console.WriteLine("***********************************************************");
+                        //loop for reload web
+                        int delayTimerpagelist = 10;
+                        bool loadFailpagelist = false;
+                        int addedTimerpagelist = 100;
+                        while (loadFailpagelist == false)
+                        {
+                            try
+                            {
+                                //web page load and extract
+                                await LoadPageAsync(browser, shopUrl + b);
+                                Thread.Sleep(delayTimerpagelist);
+                                Console.WriteLine("*****************Page link list****************************");
+                                Console.WriteLine(shopUrl + b);
+                                Console.WriteLine("***********************************************************");
 
-                        productPageLinkList.AddRange(ColesExtraction.ProductLinkExtraction(await browser.GetSourceAsync()));
+                                productPageLinkList.AddRange(ColesExtraction.ProductLinkExtraction(await browser.GetSourceAsync()));
+
+                                //loading flag
+                                loadFailpagelist = true;
+                            }
+                            catch (Exception e)
+                            {
+                                //error action
+                                delayTimerpagelist += addedTimerpagelist;
+                                Console.WriteLine("Error: " + e);
+                                Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                loadFailpagelist = false;
+                            }
+                        }
+
+
                     }
                 }
 
+                //get in each product detail page by product link to extract product detail
                 foreach (string c in productPageLinkList)
                 {
-                    await LoadPageAsync(browser, shopUrl + c);
-                    Thread.Sleep(delayTimer);
-                    Console.WriteLine("*****************Product detail page link list****************************");
-                    Console.WriteLine(shopUrl + c);
-                    Console.WriteLine("***********************************************************");
-                    dataList.Add(ColesExtraction.DetailPageExtraction(await browser.GetSourceAsync()));
+                    //loop for reload web
+                    int delayTimerpagelist = 10;
+                    bool loadFailpagelist = false;
+                    int addedTimerpagelist = 100;
+                    while (loadFailpagelist == false)
+                    {
+                        try
+                        {
+                            //web page load and extract
+                            await LoadPageAsync(browser, shopUrl + c);
+                            Thread.Sleep(delayTimerpagelist);
+                            Console.WriteLine("*****************Product detail page link list****************************");
+                            Console.WriteLine(shopUrl + c);
+                            Console.WriteLine("***********************************************************");
+                            dataList.Add(ColesExtraction.DetailPageExtraction(await browser.GetSourceAsync(), shopUrl + c));
+
+                            //loading flag
+                            loadFailpagelist = true;
+                        }
+                        catch (Exception e)
+                        {
+                            //error action
+                            delayTimerpagelist += addedTimerpagelist;
+                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            loadFailpagelist = false;
+                        }
+                    }
+
+
                 }
-            
-            
+
+                //Export Extraction as Excel file
                 ExcelExport.AutomateExcel(dataList);
             }
         }
 
         private static async void WoolworthsTestMainAsync(string cachePath)
         {
-            int delayTimer = 5000;
+            //parameter
+            int delayTimer = 2000;
             List<string> pageLinkList = new List<string>();
             List<string> cateLinkList = new List<string>();
             List<string> productPageLinkList = new List<string>();
-            List<Data> dataList = new List<Data>();
+            List<Data_WWs> dataList = new List<Data_WWs>();
             var browserSettings = new BrowserSettings();
+
             //Reduce rendering speed to one frame per second so it's easier to take screen shots
             browserSettings.WindowlessFrameRate = 1;
             var requestContextSettings = new RequestContextSettings { CachePath = cachePath };
@@ -355,17 +539,6 @@ namespace MyProject
             using (var requestContext = new RequestContext(requestContextSettings))
             using (var browser = new ChromiumWebBrowser(TestUrl, browserSettings, requestContext))
             {
-                //if (zoomLevel > 1)
-                //{
-                //    browser.FrameLoadStart += (s, argsi) =>
-                //    {
-                //        var b = (ChromiumWebBrowser)s;
-                //        if (argsi.Frame.IsMain)
-                //        {
-                //            b.SetZoomLevel(zoomLevel);
-                //        }
-                //    };
-                //}
                 await LoadPageAsync(browser);
 
                 //Check preferences on the CEF UI Thread
@@ -382,8 +555,7 @@ namespace MyProject
                 var onUi = Cef.CurrentlyOnThread(CefThreadIds.TID_UI);
 
                 
-                await LoadPageAsync(browser, "https://www.woolworths.com.au/Shop/Browse/drinks/black-tea?pageNumber=1");
-                Thread.Sleep(delayTimer);
+
 
                 //Gets a wrapper around the underlying CefBrowser instance
                 var cefBrowser = browser.GetBrowser();
@@ -391,17 +563,66 @@ namespace MyProject
                 // You can perform a lot of low level browser operations using this interface
                 var cefHost = cefBrowser.GetHost();
 
-                string tempSource = await browser.GetSourceAsync();
+                //reload section
+                bool loadFail = false;
+                int addedTimer = 2000;
+                //extract each subcategory link
+                while (loadFail == false)
+                {
+                    try
+                    {
+                        //web page load and extract
+                        await LoadPageAsync(browser, "https://www.woolworths.com.au/Shop/Browse/drinks/black-tea");
+                        Thread.Sleep(delayTimer);
+                        string tempSource = await browser.GetSourceAsync();
+                        cateLinkList = WoolworthsExtraction.FirstCategoryLinkExtraction(tempSource);
 
-                cateLinkList = WoolworthsExtraction.FirstCategoryLinkExtraction(tempSource);
+                        //loading flag
+                        loadFail = true;
+                    }
+                    catch (Exception e)
+                    {
+                        //error action
+                        delayTimer += addedTimer;
+                        Console.WriteLine("Error: " + e);
+                        Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        loadFail = false;
+                    }
+                }
 
+                //extract each page of each subcategory
                 foreach (string a in cateLinkList)
                 {
                     string pageLink = "";
                     pageLinkList.Add(a);
-                    await LoadPageAsync(browser, shopUrl_WWS + a);
-                    Thread.Sleep(delayTimer);
-                    pageLink = WoolworthsExtraction.PageExtraction(await browser.GetSourceAsync());
+
+                    //reload section
+                    int delayTimercatelink = 2000;
+                    bool loadFailcatelink = false;
+                    int addedTimercatelink = 2000;
+                    while (loadFailcatelink == false)
+                    {
+                        try
+                        {
+                            //web page load and extract
+                            await LoadPageAsync(browser, shopUrl_WWS + a);
+                            Thread.Sleep(delayTimercatelink);
+                            pageLink = WoolworthsExtraction.PageExtraction(await browser.GetSourceAsync());
+
+                            //loading flag
+                            loadFailcatelink = true;
+                        }
+                        catch (Exception e)
+                        {
+                            //error action
+                            delayTimercatelink += addedTimercatelink;
+                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            loadFailcatelink = false;
+                        }
+                    }
+
+
 
                     if (pageLink != null && pageLink != "")
                     {
@@ -422,10 +643,33 @@ namespace MyProject
 
                     while (pageLink != null)
                     {
+                        //reload section
+                        int delayTimerpagelink = 2000;
+                        bool loadFailpagelink = false;
+                        int addedTimerpagelink = 2000;
+                        while (loadFailpagelink == false)
+                        {
+                            try
+                            {
+                                //web page load and extract
+                                await LoadPageAsync(browser, shopUrl_WWS + pageLink);
+                                Thread.Sleep(delayTimerpagelink);
+                                pageLink = WoolworthsExtraction.PageExtraction(await browser.GetSourceAsync());
 
-                        await LoadPageAsync(browser, shopUrl_WWS + pageLink);
-                        Thread.Sleep(delayTimer);
-                        pageLink = WoolworthsExtraction.PageExtraction(await browser.GetSourceAsync());
+
+                                //loading flag
+                                loadFailpagelink = true;
+                            }
+                            catch (Exception e)
+                            {
+                                //error action
+                                delayTimerpagelink += addedTimerpagelink;
+                                Console.WriteLine("Error: " + e);
+                                Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                loadFailpagelink = false;
+                            }
+                        }
+
                         if (pageLink != null)
                         {
                             Console.WriteLine("****************Page Link******************************");
@@ -439,16 +683,120 @@ namespace MyProject
 
                 }
 
-                foreach(string b in pageLinkList)
+                //extract product detail from each subcategory page
+                foreach (string b in pageLinkList)
                 {
-                    Console.WriteLine(shopUrl_WWS + b);
+                    //reload section
+                    int delayTimerpagelinklist = 2000;
+                    bool loadFailpagelinklist = false;
+                    int addedTimerpagelinklist = 2000;
+                    while (loadFailpagelinklist == false)
+                    {
+                        try
+                        {
+                            //web page load and extract
+                            await LoadPageAsync(browser, shopUrl_WWS + b);
+                            Thread.Sleep(delayTimerpagelinklist);
+                            string pageSource = await browser.GetSourceAsync();
+                            Console.WriteLine("*****************Product detail****************************");
+                            Console.WriteLine(shopUrl_WWS + b);
+                            Console.WriteLine("***********************************************************");
+                            dataList.AddRange(WoolworthsExtraction.DetailExtraction(pageSource));
+                            //loading flag
+                            loadFailpagelinklist = true;
+                        }
+                        catch (Exception e)
+                        {
+                            //error action
+                            delayTimerpagelinklist += addedTimerpagelinklist;
+                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            loadFailpagelinklist = false;
+                        }
+                    }
                 }
 
             }
-            Console.WriteLine();
+            //export data as Excel file
+            ExcelExport.AutomateExcel_WWs(dataList);
 
         }
 
+        private static async void WoolworthsRealTestMainAsync(string cachePath)
+        {
+            //parameter
+            int delayTimer = 2000;
+            List<string> pageLinkList = new List<string>();
+            List<Data_WWs> cateLinkList = new List<Data_WWs>();
+            List<string> productPageLinkList = new List<string>();
+            List<Data> dataList = new List<Data>();
+            var browserSettings = new BrowserSettings();
+            //Reduce rendering speed to one frame per second so it's easier to take screen shots
+            browserSettings.WindowlessFrameRate = 1;
+            var requestContextSettings = new RequestContextSettings { CachePath = cachePath };
+
+            // RequestContext can be shared between browser instances and allows for custom settings
+            // e.g. CachePath
+            using (var requestContext = new RequestContext(requestContextSettings))
+            using (var browser = new ChromiumWebBrowser(TestUrl, browserSettings, requestContext))
+            {
+
+                await LoadPageAsync(browser);
+
+                //Check preferences on the CEF UI Thread
+                await Cef.UIThreadTaskFactory.StartNew(delegate
+                {
+                    var preferences = requestContext.GetAllPreferences(true);
+
+                    //Check do not track status
+                    var doNotTrack = (bool)preferences["enable_do_not_track"];
+
+                    Debug.WriteLine("DoNotTrack:" + doNotTrack);
+                });
+
+                var onUi = Cef.CurrentlyOnThread(CefThreadIds.TID_UI);
+
+
+
+
+                //Gets a wrapper around the underlying CefBrowser instance
+                var cefBrowser = browser.GetBrowser();
+                // Gets a warpper around the CefBrowserHost instance
+                // You can perform a lot of low level browser operations using this interface
+                var cefHost = cefBrowser.GetHost();
+
+                //reload section
+                bool loadFail = false;
+                int addedTimer = 2000;
+
+                //extract all product detail from current subcategory link
+                while (loadFail == false)
+                {
+                    try
+                    {
+                        //web page load and extract
+                        await LoadPageAsync(browser, "https://www.woolworths.com.au/Shop/Browse/drinks/energy-drinks");
+                        Thread.Sleep(delayTimer);
+                        string tempSource = await browser.GetSourceAsync();
+                        cateLinkList = WoolworthsExtraction.DetailExtraction(tempSource);
+
+                        //loading flag
+                        loadFail = true;
+                    }
+                    catch (Exception e)
+                    {
+                        //error action
+                        delayTimer += addedTimer;
+                        Console.WriteLine("Error: " + e);
+                        Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        loadFail = false;
+                    }
+                }
+            }
+
+            //export as Excel file
+            ExcelExport.AutomateExcel_WWsTest(cateLinkList);
+        }
 
         private static void dataExportForTXT(List<Data> dataList)
         {
@@ -514,7 +862,9 @@ namespace MyProject
             Console.WriteLine("---------> menu <---------");
             Console.WriteLine("(1)Demo Extraction");
             Console.WriteLine("(2)Coles Beverage Full Extraction");
-            Console.WriteLine("(3)Woolworth Beverage Test Extraction");
+            Console.WriteLine("(3)Woolworth Beverage Full Extraction");
+            Console.WriteLine("(4)Woolworth TEST");
+            Console.WriteLine("(5)Woolworth Excel Extract TEST");
             Console.WriteLine("(X)Exit");
             Console.WriteLine("");
             Console.Write("Choose a selection: ");
