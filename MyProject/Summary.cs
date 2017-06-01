@@ -21,10 +21,12 @@ namespace MyProject
 
             int specialProductNum = 0;
             int specialProductNum_Coles = 0;
-
+            double totalSalePrice = 0;
+            double totalSalePrice_WWs = 0;
             //special product list
             foreach (Data_WWs a in dataList_WWs)
             {
+                totalSalePrice_WWs = totalSalePrice_WWs + Convert.ToDouble(a.Price);
                 if (a.IfSale == "Y")
                 {
                     specialProductNum++;
@@ -35,6 +37,7 @@ namespace MyProject
 
             foreach (Data b in dataList)
             {
+                totalSalePrice = totalSalePrice + Convert.ToDouble(b.Price);
                 if (b.IfSale == "Y")
                 {
                     specialProductNum_Coles++;
@@ -43,7 +46,18 @@ namespace MyProject
                 }
             }
 
+
+            //calculation
+            double totalAVG = (totalSalePrice_WWs + totalSalePrice) / Convert.ToDouble((dataList_WWs.Count + dataList.Count));
+            double colesAVG = totalSalePrice / Convert.ToDouble(dataList.Count);
+            double wWsAVG = totalSalePrice_WWs / Convert.ToDouble(dataList_WWs.Count);
+            totalAVG = Math.Round(totalAVG, 2);
+            colesAVG = Math.Round(colesAVG, 2);
+            wWsAVG = Math.Round(wWsAVG, 2);
             //summary
+            Console.WriteLine("Current Total Average Product (Coles) Price is $" + colesAVG.ToString());
+            Console.WriteLine("Current Total Average Product (WoolWorths) Price is $" + wWsAVG.ToString());
+            Console.WriteLine("Current Total Average Product (Coles and WoolWorths) Price is $" + totalAVG.ToString());
             Console.WriteLine("Current Total Special Product (Coles) Number is " + specialProductNum_Coles.ToString());
             Console.WriteLine("Current Total Special Product (WoolWorths) Number is " + specialProductNum.ToString());
             Console.WriteLine("Current Total Special Product (Coles and WoolWorths) Number is " + (specialProductNum + specialProductNum_Coles).ToString());
