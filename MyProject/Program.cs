@@ -8,6 +8,7 @@ using CefSharp.OffScreen;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
 
 namespace MyProject
 {
@@ -62,6 +63,22 @@ namespace MyProject
                     case "5":
                         Summary.SpecialProductSummary();
                         Console.ReadKey();
+                        break;
+                    case "6":
+                        {
+                            Console.Write("You have chosen to exit and open database. Do you wish to exit? (Y or N) : ");
+                            Response = Console.ReadLine();
+                            Response = Response.ToLower();
+                            if (Response == "y")
+                            {
+                                isRunning = false;
+                            }
+                            else if (Response == "n")
+                            {
+                                break;
+                            }
+                        }
+                        OpenDatabaseProgram();
                         break;
                     // Exit Function
                     case "x":
@@ -173,9 +190,9 @@ namespace MyProject
                     {
                         delayTimer += 50;
                         Console.WriteLine("***********************************************************");
-                        Console.WriteLine("Error: " + e);
+                        Console.WriteLine("(1) Coles Demo: Error: " + e);
                         Console.WriteLine("***********************************************************");
-                        Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        Console.WriteLine("(1) Coles Demo: Page Loading Fail, Web is Reloading, or Set up delay time");
                         Console.WriteLine("***********************************************************");
                         loadfail = false;
                     }
@@ -188,10 +205,10 @@ namespace MyProject
                     pageLinkList.Add(pageLink);
                 }
 
-                Console.WriteLine("************************category link list*************************");
+                Console.WriteLine("************************(1) Coles Demo: Category link list*************************");
                 Console.WriteLine(shopUrl + a);
                 Console.WriteLine("********************************************************************");
-                Console.WriteLine("************************First page link*************************");
+                Console.WriteLine("************************(1) Coles Demo: First page link*************************");
                 Console.WriteLine(shopUrl + pageLink);
                 Console.WriteLine("********************************************************************");
 
@@ -213,9 +230,9 @@ namespace MyProject
                         {
                             delayTimer1 += 50;
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("(1) Coles Demo: Error: " + e);
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("(1) Coles Demo: Page Loading Fail, Web is Reloading, or Set up delay time");
                             Console.WriteLine("***********************************************************");
                             loadfail1 = false;
                         }
@@ -224,7 +241,7 @@ namespace MyProject
 
                     if (pageLink != null)
                     {
-                        Console.WriteLine("****************Page Link******************************");
+                        Console.WriteLine("****************(1) Coles Demo: Page Link******************************");
                         Console.WriteLine(shopUrl + pageLink);
                         Console.WriteLine("********************************************************");
 
@@ -242,7 +259,7 @@ namespace MyProject
                         {
                             await LoadPageAsync(browser, shopUrl + b);
                             Thread.Sleep(delayTimer1);
-                            Console.WriteLine("*****************Page link list****************************");
+                            Console.WriteLine("*****************(1) Coles Demo: Page link list****************************");
                             Console.WriteLine(shopUrl + b);
                             Console.WriteLine("***********************************************************");
 
@@ -253,9 +270,9 @@ namespace MyProject
                         {
                             delayTimer1 += 50;
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("(1) Coles Demo: Error: " + e);
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("(1) Coles Demo: Page Loading Fail, Web is Reloading, or Set up delay time");
                             Console.WriteLine("***********************************************************");
                             loadfail1 = false;
                         }
@@ -274,7 +291,7 @@ namespace MyProject
                         {
                             await LoadPageAsync(browser, shopUrl + c);
                             Thread.Sleep(delayTimer1);
-                            Console.WriteLine("*****************Product detail page link list****************************");
+                            Console.WriteLine("*****************(1) Coles Demo: Product detail page link list****************************");
                             Console.WriteLine(shopUrl + c);
                             Console.WriteLine("***********************************************************");
                             dataList.Add(ColesExtraction.DetailPageExtraction(await browser.GetSourceAsync(), shopUrl + c));
@@ -284,9 +301,9 @@ namespace MyProject
                         {
                             delayTimer1 += 50;
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("(1) Coles Demo: Error: " + e);
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("(1) Coles Demo: Page Loading Fail, Web is Reloading, or Set up delay time");
                             Console.WriteLine("***********************************************************");
                             loadfail1 = false;
                         }
@@ -361,9 +378,9 @@ namespace MyProject
                         //error action
                         delayTimer += addedTimer;
                         Console.WriteLine("***********************************************************");
-                        Console.WriteLine("Error: " + e);
+                        Console.WriteLine("(2) Coles Full Extraction: Error: " + e);
                         Console.WriteLine("***********************************************************");
-                        Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        Console.WriteLine("(2) Coles Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                         Console.WriteLine("***********************************************************");
                         loadFail = false;
                     }
@@ -397,9 +414,9 @@ namespace MyProject
                             //error action
                             delayTimerpagelink += addedTimerpagelink;
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("(2) Coles Full Extraction: Error: " + e);
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("(2) Coles Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                             Console.WriteLine("***********************************************************");
                             loadFailpagelink = false;
                         }
@@ -412,10 +429,10 @@ namespace MyProject
                         pageLinkList.Add(pageLink);
                     }
 
-                    Console.WriteLine("************************category link list*************************");
+                    Console.WriteLine("************************(2) Coles Full Extraction: Category link list*************************");
                     Console.WriteLine(shopUrl + a);
                     Console.WriteLine("********************************************************************");
-                    Console.WriteLine("************************First page link*************************");
+                    Console.WriteLine("************************(2) Coles Full Extraction: First page link*************************");
                     Console.WriteLine(shopUrl + pageLink);
                     Console.WriteLine("********************************************************************");
 
@@ -443,9 +460,9 @@ namespace MyProject
                                 //error action
                                 delayTimerpagelink1 += addedTimerpagelink1;
                                 Console.WriteLine("***********************************************************");
-                                Console.WriteLine("Error: " + e);
+                                Console.WriteLine("(2) Coles Full Extraction: Error: " + e);
                                 Console.WriteLine("***********************************************************");
-                                Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                Console.WriteLine("(2) Coles Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                                 Console.WriteLine("***********************************************************");
                                 loadFailpagelink1 = false;
                             }
@@ -456,7 +473,7 @@ namespace MyProject
 
                         if (pageLink != null)
                         {
-                            Console.WriteLine("****************Page Link******************************");
+                            Console.WriteLine("****************(2) Coles Full Extraction: Page Link******************************");
                             Console.WriteLine(shopUrl + pageLink);
                             Console.WriteLine("********************************************************");
 
@@ -478,7 +495,7 @@ namespace MyProject
                                 //web page load and extract
                                 await LoadPageAsync(browser, shopUrl + b);
                                 Thread.Sleep(delayTimerpagelist);
-                                Console.WriteLine("*****************Page link list****************************");
+                                Console.WriteLine("*****************(2) Coles Full Extraction: Page link list****************************");
                                 Console.WriteLine(shopUrl + b);
                                 Console.WriteLine("***********************************************************");
 
@@ -492,9 +509,9 @@ namespace MyProject
                                 //error action
                                 delayTimerpagelist += addedTimerpagelist;
                                 Console.WriteLine("***********************************************************");
-                                Console.WriteLine("Error: " + e);
+                                Console.WriteLine("(2) Coles Full Extraction: Error: " + e);
                                 Console.WriteLine("***********************************************************");
-                                Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                Console.WriteLine("(2) Coles Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                                 Console.WriteLine("***********************************************************");
                                 loadFailpagelist = false;
                             }
@@ -518,7 +535,7 @@ namespace MyProject
                             //web page load and extract
                             await LoadPageAsync(browser, shopUrl + c);
                             Thread.Sleep(delayTimerpagelist);
-                            Console.WriteLine("*****************Product detail page link list****************************");
+                            Console.WriteLine("*****************(2) Coles Full Extraction: Product detail page link list****************************");
                             Console.WriteLine(shopUrl + c);
                             Console.WriteLine("***********************************************************");
                             dataList.Add(ColesExtraction.DetailPageExtraction(await browser.GetSourceAsync(), shopUrl + c));
@@ -531,9 +548,9 @@ namespace MyProject
                             //error action
                             delayTimerpagelist += addedTimerpagelist;
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("(2) Coles Full Extraction: Error: " + e);
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("(2) Coles Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                             Console.WriteLine("***********************************************************");
                             loadFailpagelist = false;
                         }
@@ -612,9 +629,9 @@ namespace MyProject
                         //error action
                         delayTimer += addedTimer;
                         Console.WriteLine("***********************************************************");
-                        Console.WriteLine("Error: " + e);
+                        Console.WriteLine("(3) WoolWorths Full Extraction: Error: " + e);
                         Console.WriteLine("***********************************************************");
-                        Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        Console.WriteLine("(3) WoolWorths Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                         Console.WriteLine("***********************************************************");
                         loadFail = false;
                     }
@@ -647,9 +664,9 @@ namespace MyProject
                             //error action
                             delayTimercatelink += addedTimercatelink;
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("(3) WoolWorths Full Extraction: Error: " + e);
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("(3) WoolWorths Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                             Console.WriteLine("***********************************************************");
                             loadFailcatelink = false;
                         }
@@ -662,13 +679,13 @@ namespace MyProject
                         pageLinkList.Add(pageLink);
                     }
 
-                    Console.WriteLine("************************First Page Link*************************");
+                    Console.WriteLine("************************(3) WoolWorths Full Extraction: First Page Link*************************");
                     Console.WriteLine(shopUrl_WWS + a);
                     Console.WriteLine("********************************************************************");
                     if (pageLink != null && pageLink != "")
                     { 
 
-                    Console.WriteLine("************************Second page link*************************");
+                    Console.WriteLine("************************(3) WoolWorths Full Extraction: Second page link*************************");
                     Console.WriteLine(shopUrl_WWS + pageLink);
                     Console.WriteLine("********************************************************************");
 
@@ -698,9 +715,9 @@ namespace MyProject
                                 //error action
                                 delayTimerpagelink += addedTimerpagelink;
                                 Console.WriteLine("***********************************************************");
-                                Console.WriteLine("Error: " + e);
+                                Console.WriteLine("(3) WoolWorths Full Extraction: Error: " + e);
                                 Console.WriteLine("***********************************************************");
-                                Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                                Console.WriteLine("(3) WoolWorths Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                                 Console.WriteLine("***********************************************************");
                                 loadFailpagelink = false;
                             }
@@ -708,7 +725,7 @@ namespace MyProject
 
                         if (pageLink != null)
                         {
-                            Console.WriteLine("****************Page Link******************************");
+                            Console.WriteLine("****************(3) WoolWorths Full Extraction: Page Link******************************");
                             Console.WriteLine(shopUrl_WWS + pageLink);
                             Console.WriteLine("********************************************************");
 
@@ -734,7 +751,7 @@ namespace MyProject
                             await LoadPageAsync(browser, shopUrl_WWS + b);
                             Thread.Sleep(delayTimerpagelinklist);
                             string pageSource = await browser.GetSourceAsync();
-                            Console.WriteLine("*****************Product detail****************************");
+                            Console.WriteLine("*****************(3) WoolWorths Full Extraction: Product detail****************************");
                             Console.WriteLine(shopUrl_WWS + b);
                             Console.WriteLine("***********************************************************");
                             dataList.AddRange(WoolworthsExtraction.DetailExtraction(pageSource));
@@ -746,9 +763,9 @@ namespace MyProject
                             //error action
                             delayTimerpagelinklist += addedTimerpagelinklist;
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Error: " + e);
+                            Console.WriteLine("(3) WoolWorths Full Extraction: Error: " + e);
                             Console.WriteLine("***********************************************************");
-                            Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                            Console.WriteLine("(3) WoolWorths Full Extraction: Page Loading Fail, Web is Reloading, or Set up delay time");
                             Console.WriteLine("***********************************************************");
                             loadFailpagelinklist = false;
                         }
@@ -827,9 +844,9 @@ namespace MyProject
                         //error action
                         delayTimer += addedTimer;
                         Console.WriteLine("***********************************************************");
-                        Console.WriteLine("Error: " + e);
+                        Console.WriteLine("(4) WoolWorths Demo: Error: " + e);
                         Console.WriteLine("***********************************************************");
-                        Console.WriteLine("Page Loading Fail, Web is Reloading, or Set up delay time");
+                        Console.WriteLine("(4) WoolWorths Demo: Page Loading Fail, Web is Reloading, or Set up delay time");
                         Console.WriteLine("***********************************************************");
                         loadFail = false;
                     }
@@ -896,17 +913,24 @@ namespace MyProject
             return tcs.Task;
         }
 
+        public static void OpenDatabaseProgram()
+        {
+            string fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\WindowsApp1.exe";
+            Process.Start(fileName);
+        }
+
 
         static void DisplayMenu()
         {
             // Inedex
             Console.Clear();
             Console.WriteLine("---------> menu <---------");
-            Console.WriteLine("(1)Demo Extraction");
-            Console.WriteLine("(2)Coles Beverage Full Extraction");
-            Console.WriteLine("(3)Woolworth Beverage Full Extraction");
-            Console.WriteLine("(4)Woolworth TEST");
-            Console.WriteLine("(5)Woolworth Excel Extract TEST");
+            Console.WriteLine("(1)Demo Extraction (Demo_Coles.xlsx)");
+            Console.WriteLine("(2)Coles Beverage Full Extraction (Test.xlsx)");
+            Console.WriteLine("(3)Woolworth Beverage Full Extraction (Test_WWs.xlsx)");
+            Console.WriteLine("(4)Woolworth TEST (Demo_WWs.xlsx)");
+            Console.WriteLine("(5)Summary from Excel File (Must have Test.xlsx & Test_WWs.xlsx together)");
+            Console.WriteLine("(6)Database Implementation (Open Database program)");
             Console.WriteLine("(X)Exit");
             Console.WriteLine("");
             Console.Write("Choose a selection: ");

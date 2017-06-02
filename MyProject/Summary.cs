@@ -55,15 +55,15 @@ namespace MyProject
             colesAVG = Math.Round(colesAVG, 2);
             wWsAVG = Math.Round(wWsAVG, 2);
             //summary
-            Console.WriteLine("Current Total Average Product (Coles) Price is $" + colesAVG.ToString());
-            Console.WriteLine("Current Total Average Product (WoolWorths) Price is $" + wWsAVG.ToString());
-            Console.WriteLine("Current Total Average Product (Coles and WoolWorths) Price is $" + totalAVG.ToString());
-            Console.WriteLine("Current Total Special Product (Coles) Number is " + specialProductNum_Coles.ToString());
-            Console.WriteLine("Current Total Special Product (WoolWorths) Number is " + specialProductNum.ToString());
-            Console.WriteLine("Current Total Special Product (Coles and WoolWorths) Number is " + (specialProductNum + specialProductNum_Coles).ToString());
-            Console.WriteLine("Current Total Product (Coles) Number is " + dataList.Count.ToString());
-            Console.WriteLine("Current Total Product (WoolWorths) Number is " + dataList_WWs.Count.ToString());
-            Console.WriteLine("Current Total Product (Coles and WoolWorths) Number is " + (dataList.Count + dataList_WWs.Count).ToString());
+            Console.WriteLine("(5) Summary: Current Total Average Product (Coles) Price is $" + colesAVG.ToString());
+            Console.WriteLine("(5) Summary: Current Total Average Product (WoolWorths) Price is $" + wWsAVG.ToString());
+            Console.WriteLine("(5) Summary: Current Total Average Product (Coles and WoolWorths) Price is $" + totalAVG.ToString());
+            Console.WriteLine("(5) Summary: Current Total Special Product (Coles) Number is " + specialProductNum_Coles.ToString());
+            Console.WriteLine("(5) Summary: Current Total Special Product (WoolWorths) Number is " + specialProductNum.ToString());
+            Console.WriteLine("(5) Summary: Current Total Special Product (Coles and WoolWorths) Number is " + (specialProductNum + specialProductNum_Coles).ToString());
+            Console.WriteLine("(5) Summary: Current Total Product (Coles) Number is " + dataList.Count.ToString());
+            Console.WriteLine("(5) Summary: Current Total Product (WoolWorths) Number is " + dataList_WWs.Count.ToString());
+            Console.WriteLine("(5) Summary: Current Total Product (Coles and WoolWorths) Number is " + (dataList.Count + dataList_WWs.Count).ToString());
 
         }
     }
