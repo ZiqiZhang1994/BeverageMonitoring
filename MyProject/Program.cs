@@ -831,7 +831,7 @@ namespace MyProject
                     try
                     {
                         //web page load and extract
-                        await LoadPageAsync(browser, "https://www.woolworths.com.au/Shop/Browse/drinks/energy-drinks");
+                        await LoadPageAsync(browser, "https://www.woolworths.com.au/Shop/Browse/freezer/frozen-meals");
                         Thread.Sleep(delayTimer);
                         string tempSource = await browser.GetSourceAsync();
                         cateLinkList = WoolworthsExtraction.DetailExtraction(tempSource);

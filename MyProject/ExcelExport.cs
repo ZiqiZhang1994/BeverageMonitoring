@@ -131,7 +131,8 @@ namespace MyProject
                 oSheet.Cells[1, 7] = "Saved Price";
                 oSheet.Cells[1, 8] = "Current Price";
                 oSheet.Cells[1, 9] = "Original Price";
-                oSheet.Cells[1, 10] = "Page Link";
+                oSheet.Cells[1, 10] = "Barcode";
+                oSheet.Cells[1, 11] = "Page Link";
 
                 //List insert
                 int rowIndex = 2;
@@ -155,6 +156,8 @@ namespace MyProject
                     oSheet.Cells[rowIndex, colIndex] = a.Price;
                     colIndex++;
                     oSheet.Cells[rowIndex, colIndex] = a.OriginalPrice;
+                    colIndex++;
+                    oSheet.Cells[rowIndex, colIndex] = a.Barcode;
                     colIndex++;
                     oSheet.Cells[rowIndex, colIndex] = a.Link;
                     rowIndex++;
@@ -232,7 +235,8 @@ namespace MyProject
                 oSheet.Cells[1, 7] = "Saved Price";
                 oSheet.Cells[1, 8] = "Current Price";
                 oSheet.Cells[1, 9] = "Original Price";
-                oSheet.Cells[1, 10] = "Page Link";
+                oSheet.Cells[1, 10] = "Barcode";
+                oSheet.Cells[1, 11] = "Page Link";
 
                 //List insert
                 int rowIndex = 2;
@@ -256,6 +260,8 @@ namespace MyProject
                     oSheet.Cells[rowIndex, colIndex] = a.Price;
                     colIndex++;
                     oSheet.Cells[rowIndex, colIndex] = a.OriginalPrice;
+                    colIndex++;
+                    oSheet.Cells[rowIndex, colIndex] = a.Barcode;
                     colIndex++;
                     oSheet.Cells[rowIndex, colIndex] = a.Link;
                     rowIndex++;
@@ -700,6 +706,7 @@ namespace MyProject
                 Excel.Range rng8 = ws.Cells.get_Range("H2", "H" + rowsint);
                 Excel.Range rng9 = ws.Cells.get_Range("I2", "I" + rowsint);
                 Excel.Range rng10 = ws.Cells.get_Range("J2", "J" + rowsint);
+                Excel.Range rng11 = ws.Cells.get_Range("K2", "K" + rowsint);
                 object[,] arryBrand = (object[,])rng1.Value2;   //get range's value
                 object[,] arryProductName = (object[,])rng2.Value2;   //get range's value
                 object[,] arrySize = (object[,])rng3.Value2;   //get range's value
@@ -709,7 +716,8 @@ namespace MyProject
                 object[,] arrySavedPrice = (object[,])rng7.Value2;   //get range's value
                 object[,] arryNowPrice = (object[,])rng8.Value2;   //get range's value
                 object[,] arryOriPrice = (object[,])rng9.Value2;   //get range's value
-                object[,] arryLink = (object[,])rng10.Value2;   //get range's value
+                object[,] arryCode = (object[,])rng10.Value2;   //get range's value
+                object[,] arryLink = (object[,])rng11.Value2;   //get range's value
 
                 //insert array in list
 
@@ -796,6 +804,15 @@ namespace MyProject
                     else
                     {
                         data.OriginalPrice = "0";
+                    }
+
+                    if (arryCode[i, 1] != null)
+                    {
+                        data.Barcode = arryCode[i, 1].ToString();
+                    }
+                    else
+                    {
+                        data.Barcode = "0";
                     }
 
                     if (arryLink[i, 1] != null)
